@@ -1,13 +1,47 @@
-import { Html, Head, Main, NextScript } from "next/document";
+import Document, {
+  Html,
+  Head,
+  Main,
+  NextScript,
+  DocumentContext,
+  DocumentInitialProps,
+} from 'next/document';
+import { createHash } from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 
-export default function Document() {
-  return (
-    <Html lang="en">
-      <Head />
-      <body className="antialiased">
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  );
+const isDev = process.env.NODE_ENV === 'development';
+
+interface MyDocumentProps extends DocumentInitialProps {
+  nonce?: string;
 }
+
+class MyDocument extends Document<MyDocumentProps> {
+
+  static async getInitialProps(ctx: DocumentContext) {
+    const initialProps = await Document.getInitialProps(ctx);
+
+    const nonce = createHash('sha256').update(uuidv4()).digest('base64')
+
+    if (ctx.res) {
+      ctx.res.setHeader('x-nonce', nonce);
+      ctx.res.setHeader('Content-Security-Policy', `script-src 'strict-dynamic' 'nonce-${nonce}' 'unsafe-eval' 'unsafe-inline' http: https:; object-src 'none'; base-uri 'none';`)
+    }
+
+    return { ...initialProps, nonce };
+  }
+
+  render() {
+    const nonce = this.props.nonce;
+    return (
+      <Html lang="ja">
+        <Head nonce={nonce} />
+        <body>
+          <Main />
+          <NextScript nonce={nonce} />
+        </body>
+      </Html>
+    )
+  }
+}
+
+export default MyDocument;
