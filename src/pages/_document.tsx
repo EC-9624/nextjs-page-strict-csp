@@ -24,7 +24,7 @@ class MyDocument extends Document<MyDocumentProps> {
 
     if (ctx.res) {
       ctx.res.setHeader('x-nonce', nonce);
-      ctx.res.setHeader('Content-Security-Policy', `script-src 'strict-dynamic' 'nonce-${nonce}' 'unsafe-eval' 'unsafe-inline' http: https:; object-src 'none'; base-uri 'none'; style-src 'unsafe-inline'`)
+      ctx.res.setHeader('Content-Security-Policy', `script-src 'strict-dynamic' 'nonce-${nonce}' 'unsafe-inline' http: https:; object-src 'none'; base-uri 'none'; style-src 'self' 'unsafe-inline'; report-uri http://localhost:3002/csp-violation;`)
     }
 
     return { ...initialProps, nonce };
