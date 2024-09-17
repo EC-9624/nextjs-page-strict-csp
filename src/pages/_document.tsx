@@ -21,10 +21,8 @@ class MyDocument extends Document<MyDocumentProps> {
     const nonce = createHash('sha256').update(uuidv4()).digest('base64')
 
     if (ctx.res) {
-      ctx.res.setHeader('x-nonce', nonce);
-      ctx.res.setHeader('Reporting-Endpoints', 'csp-endpoint="http://localhost:3002/csp-violation"')
       ctx.res.setHeader('Content-Security-Policy', `script-src 'strict-dynamic' 'nonce-${nonce}' 'unsafe-inline' http: https:; object-src 'none'; base-uri 'none'; `)
-    } 3
+    }
 
     return { ...initialProps, nonce };
   }
