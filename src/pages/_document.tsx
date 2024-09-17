@@ -9,8 +9,6 @@ import Document, {
 import { createHash } from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 
-const isDev = process.env.NODE_ENV === 'development';
-
 interface MyDocumentProps extends DocumentInitialProps {
   nonce?: string;
 }
@@ -24,8 +22,9 @@ class MyDocument extends Document<MyDocumentProps> {
 
     if (ctx.res) {
       ctx.res.setHeader('x-nonce', nonce);
-      ctx.res.setHeader('Content-Security-Policy', `script-src 'strict-dynamic' 'nonce-${nonce}' 'unsafe-inline' http: https:; object-src 'none'; base-uri 'none'; style-src 'self' 'unsafe-inline'; report-uri http://localhost:3002/csp-violation;`)
-    }
+      ctx.res.setHeader('Reporting-Endpoints', 'csp-endpoint="http://localhost:3002/csp-violation"')
+      ctx.res.setHeader('Content-Security-Policy', `script-src 'strict-dynamic' 'nonce-${nonce}' 'unsafe-inline' http: https:; object-src 'none'; base-uri 'none'; `)
+    } 3
 
     return { ...initialProps, nonce };
   }
