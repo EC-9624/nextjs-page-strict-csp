@@ -18,9 +18,11 @@ export const getServerSideProps = (async () => {
 export default function Page({
     repo,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+
     return (
         <main className='flex justify-center items-center h-screen'>
             <h1 className='text-4xl font-bold'>{repo.stargazers_count}</h1>
+            <h2>xddd</h2>
         </main>
 
     )

@@ -21,8 +21,9 @@ class MyDocument extends Document<MyDocumentProps> {
     const nonce = createHash('sha256').update(uuidv4()).digest('base64')
 
     if (ctx.res) {
-      ctx.res.setHeader('Content-Security-Policy', `script-src 'strict-dynamic' 'nonce-${nonce}' 'unsafe-inline' http: https:; object-src 'none'; base-uri 'none'; `)
+      ctx.res.setHeader('Content-Security-Policy', `script-src 'strict-dynamic' 'nonce-${nonce}' 'sha256-Qhdnrb+csbV1zMlKSzGiUeT5EiijiJocdIpAwk5NM3w=' http: https: 'unsafe-eval'; object-src 'none'; base-uri 'none';`)
     }
+    //'sha256-KiHgyNjE+Yvsgma8XnEhjQedmhIoMy+kfKZ2z1V3BZk='
 
     return { ...initialProps, nonce };
   }
@@ -35,6 +36,7 @@ class MyDocument extends Document<MyDocumentProps> {
         <body>
           <Main />
           <NextScript nonce={nonce} />
+          <script>console.log(inline script)</script>
         </body>
       </Html>
     )
